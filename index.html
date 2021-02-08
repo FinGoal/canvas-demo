@@ -3,6 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="Content-Security-Policy" content="frame-src http://localhost:3001/ https://fingoalWebApp-dev.herokuapp.com/>
   <meta name="csrf-token" content="shfIk30J-yiHCuNBimKOjN_LNjUsgLgIQqgE">
   <meta name="description" content="">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
@@ -248,7 +249,7 @@
                               </a></div>
                           </div>
                           <div class="grid--wrap  grid__col-12 grid--direction-row">
-                            <div class="grid__cell "><a class="reflex-col-12" href="/fico-score">
+                            <div class="grid__cell " id="fingoal-button"><a class="reflex-col-12">
                                 <div
                                   class="cb-sidebar_link fastClick grid--align-center grid--wrap  grid__col-12 grid--direction-row">
                                   <div class="grid__cell " style="padding: 5px; margin: 0px; flex: 0 0 auto;"><img
@@ -257,7 +258,7 @@
                                       style="height: 30px; width: 30px;"></div>
                                   <div class="grid__cell "
                                     style="max-width: 100%; font-family: -apple-system, Roboto, &quot;Segoe UI&quot;, sans-serif; font-size: 15px; flex: 1 1 100px;">
-                                    <span>FICO® Score</span></div>
+                                    <span>Find Money</span></div>
                                 </div>
                               </a></div>
                           </div>
@@ -347,7 +348,7 @@
             style="top: 45px; justify-content: flex-end; color: rgb(51, 51, 51); flex: 1 1 auto;">
             <div class="cb-feature_area grid--direction-column grid__col-12 grid__col-lg-10 grid--no-wrap "
               style="background-color: rgba(255, 255, 255, 0);">
-              <div class="cb-dashboard_body-wrap  grid--direction-column grid__col-12 grid--no-wrap "
+              <div class="cb-dashboard_body-wrap  grid--direction-column grid__col-12 grid--no-wrap " id="main-html"
                 style="background-color: rgba(255, 255, 255, 0); flex: 1 0 auto;">
                 <div class="cb-account-pane grid--wrap  grid__col-12 grid--direction-row" tabindex="0"
                   style="margin-bottom: 20px; background-color: rgba(255, 255, 255, 0); flex: 0 0 160px;">
@@ -728,15 +729,32 @@
   <script>
     // mocks up the open/close script which is somewhere within dashboard.js, but the code is minified so I'll be fucked if I ever actually find where.
     const viewport = document.getElementById("viewport");
-    const menu = document.getElementById("menu");
+    const menu = document.getElementById("menu"); 
+    const fingoalButton = document.getElementById("fingoal-button");
+    const main = document.getElementById("main-html");
+
+
     menu.addEventListener("click", (evt) => {
-      console.log("That's a click");
       const classes = viewport.classList;
       if (viewport.classList.contains('o-sidebar-open')) {
         viewport.classList.remove("o-sidebar-open");
       } else {
         viewport.classList.add('o-sidebar-open');
       }
+    });
+
+    fingoalButton.addEventListener("click", (evt) => {
+      // first close the menu.
+      viewport.classList.remove("o-sidebar-open");
+      // step 2: frag the main html
+      // step 3: replace with iframe to Find Money
+      // this will do both things
+      // looks like we might need to tinker with Find Money's origin settings to enable iframe capability.
+      main.innerHTML = '<iframe id="find-money" src="http://localhost:3001/canvas-credit-union?userId=1034904" title="Find Money" style="height:100vh"></iframe>';
+
+      const findMoney = document.getElementById("find-money");
+      console.log(findMoney);
+
     });
 
   </script>
