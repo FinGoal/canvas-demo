@@ -24,6 +24,7 @@
       z-index: 0;
       width: 100vw;
       border: none;
+      overflow: scroll;
     }
 
     .sliding-left {
@@ -100,7 +101,7 @@
                       <div class="grid__cell " style="padding: 5px; margin: 0px;">
                         <div
                           style="font-family: -apple-system, Roboto, &quot;Segoe UI&quot;, sans-serif; font-size: 10px; color: rgb(255, 255, 255); padding: 0px 0px 0px 5px;">
-                          <div class="cb-sidebar_last-login t-header"><span>Last Login: </span><span>02/08/2021</span>
+                          <div class="cb-sidebar_last-login t-header"><span>Last Login: </span><span>02/24/2021</span>
                           </div>
                         </div>
                       </div>
@@ -121,14 +122,14 @@
                             style="padding: 7px 8px 0px 10px; font-weight: bold; height: 30px; background-color: rgb(64, 64, 64); font-family: -apple-system, Roboto, &quot;Segoe UI&quot;, sans-serif; font-size: 16px; color: rgb(255, 255, 255);">
                             MANAGE ACCOUNTS</div>
                           <div class="grid--wrap  grid__col-12 grid--direction-row">
-                            <div class="grid__cell "><a class="reflex-col-12" href="/accounts">
+                            <div class="grid__cell " id="return-home-button"><a class="reflex-col-12">
                                 <div
                                   class="cb-sidebar_link fastClick grid--align-center grid--wrap  grid__col-12 grid--direction-row">
                                   <div class="grid__cell " style="padding: 5px; margin: 0px; flex: 0 0 auto;"><img
                                       name="alias_sidebar_accountsbutton_img" class="cb-icon" aria-hidden="true" alt=""
                                       src="https://mz-content-assets.s3.amazonaws.com/PSCU/8.0.227/web/fb1900e23e86d2fbc30c2df3f16bfcbf.svg"
                                       style="height: 30px; width: 30px;"></div>
-                                  <div class="grid__cell "
+                                  <div class="grid__cell " 
                                     style="max-width: 100%; font-family: -apple-system, Roboto, &quot;Segoe UI&quot;, sans-serif; font-size: 15px; flex: 1 1 100px;">
                                     <span>Accounts</span></div>
                                 </div>
@@ -766,7 +767,7 @@
     const fingoalButton = document.getElementById("fingoal-button");
     const main = document.getElementById("main-html");
     const content = document.getElementById("all-content");
-
+    const returnHomeButton = document.getElementById("return-home-button");
 
     menu.addEventListener("click", (evt) => {
       const fingoal = document.getElementById("find-money");
@@ -792,24 +793,46 @@
       }
     });
 
+    returnHomeButton.addEventListener("click", (evt) => {
+      const fingoal = document.getElementById("find-money");
+      if (fingoal) {
+        viewport.classList.remove("o-sidebar-open");
+        fingoal.style.visibility = "hidden";
+        fingoal.style.left = "0px";
+      } else {
+        viewport.classList.remove("o-sidebar-open");
+        console.log("no fingoal");
+      }
+    })
+
     fingoalButton.addEventListener("click", (evt) => {
       // first close the menu.
+      const fingoal = document.getElementById("find-money");
       viewport.classList.remove("o-sidebar-open");
       // step 2: frag the main html
       // step 3: replace with iframe to Find Money
       // this will do both things
       // looks like we might need to tinker with Find Money's origin settings to enable iframe capability.
-      const iframe = document.createElement('iframe')
-      iframe.setAttribute("src", "https://app-dev.fingoal.com/sandbox");
-      iframe.setAttribute("id", "find-money");
-      iframe.style.backgroundColor = "white";
-      content.append(iframe);
+      if (!fingoal) {
+        const iframe = document.createElement('iframe');
+        iframe.setAttribute("src", "https://app-dev.fingoal.com/sandbox");
+        iframe.setAttribute("id", "find-money");
+        iframe.style.backgroundColor = "white";
+        content.append(iframe);
 
-      const findMoney = document.getElementById("find-money");
-      findMoney.addEventListener("click", (evt) => {
-        console.log("find money clicked");
-      });
-
+        const findMoney = document.getElementById("find-money");
+        findMoney.addEventListener("click", (evt) => {
+          console.log("find money clicked");
+        });
+      } else {
+        // in the event findMoney has already been mounted;
+        fingoal.style.visibility = "visible";
+        fingoal.classList.add('sliding-left');
+        window.setTimeout(() => {
+          fingoal.style.left = "0px";
+          fingoal.classList.remove("sliding-left");
+        }, 300);
+      }
     });
 
   </script>
